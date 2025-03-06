@@ -1,0 +1,83 @@
+{
+  "books": [
+    {
+      "title": "czvvтапрпа",
+      "author": "vxcvcxп",
+      "category": "Fiction",
+      "isbn": "v",
+      "active": true,
+      "modifiedAt": "2025-03-06T22:54:25.839Z",
+      "id": "d34c"
+    },
+    {
+      "id": "755d",
+      "title": "фаівмві",
+      "author": "ваівавіа",
+      "category": "віа",
+      "isbn": "v",
+      "active": true,
+      "createdAt": "2025-03-06T22:43:24.867Z",
+      "modifiedAt": "2025-03-06T22:54:29.150Z"
+    },
+    {
+      "id": "47a6",
+      "title": "Title",
+      "author": "Author",
+      "category": "Category",
+      "isbn": "ISBN",
+      "active": true,
+      "createdAt": "2025-03-06T22:44:16.294Z",
+      "modifiedAt": "2025-03-06T22:44:16.294Z"
+    },
+    {
+      "id": "0470",
+      "title": "в",
+      "author": "м",
+      "category": "вв",
+      "isbn": "вм",
+      "active": true,
+      "createdAt": "2025-03-06T23:01:21.106Z",
+      "modifiedAt": "2025-03-06T23:01:21.106Z"
+    },
+    {
+      "id": "f0f3",
+      "title": "Title",
+      "author": "Title",
+      "category": "Title",
+      "isbn": "Title",
+      "active": true,
+      "createdAt": "2025-03-06T23:01:31.097Z",
+      "modifiedAt": "2025-03-06T23:01:41.913Z"
+    },
+    {
+      "id": "24a1",
+      "title": "Author",
+      "author": "Author",
+      "category": "Author",
+      "isbn": "Author",
+      "active": true,
+      "createdAt": "2025-03-06T23:01:38.135Z",
+      "modifiedAt": "2025-03-06T23:01:38.135Z"
+    },
+    {
+      "id": "7468",
+      "title": "л",
+      "author": "л",
+      "category": "Fiction",
+      "isbn": "5",
+      "active": true,
+      "createdAt": "2025-03-06T23:11:44.714Z",
+      "modifiedAt": "2025-03-06T23:11:44.714Z"
+    },
+    {
+      "id": "aab1",
+      "title": "м",
+      "author": "м",
+      "category": "Fiction",
+      "isbn": "п",
+      "active": true,
+      "createdAt": "2025-03-06T23:15:02.997Z",
+      "modifiedAt": "2025-03-06T23:15:02.997Z"
+    }
+  ]
+}
