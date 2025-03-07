@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { addBookThunk, updateBookThunk } from "../redux/booksSlice";
 import { useParams, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const AddEditBook: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { books, status } = useSelector((state: RootState) => state.books);
+  const { books } = useSelector((state: RootState) => state.books);
 
   const [bookData, setBookData] = useState({
     title: "",
@@ -99,12 +100,12 @@ const AddEditBook: React.FC = () => {
   };
 
   return (
-    <div>
+    <Wrapper>
       <h1>{id ? "Edit Book" : "Add New Book"}</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+      <Form onSubmit={handleSubmit}>
+        <Label>
           Title:
-          <input
+          <Input
             type="text"
             name="title"
             value={bookData.title}
@@ -112,11 +113,11 @@ const AddEditBook: React.FC = () => {
             required
             className={errors.title ? "input-error" : ""}
           />
-          {errors.title && <p className="error-message">Title is required</p>}
-        </label>
-        <label>
+          {errors.title && <ErrorMessage>Title is required</ErrorMessage>}
+        </Label>
+        <Label>
           Author:
-          <input
+          <Input
             type="text"
             name="author"
             value={bookData.author}
@@ -124,11 +125,11 @@ const AddEditBook: React.FC = () => {
             required
             className={errors.author ? "input-error" : ""}
           />
-          {errors.author && <p className="error-message">Author is required</p>}
-        </label>
-        <label>
+          {errors.author && <ErrorMessage>Author is required</ErrorMessage>}
+        </Label>
+        <Label>
           Category:
-          <select
+          <Select
             name="category"
             value={bookData.category}
             onChange={handleChange}
@@ -141,26 +142,26 @@ const AddEditBook: React.FC = () => {
             <option value="Sci-Fi">Sci-Fi</option>
             <option value="Biography">Biography</option>
             <option value="History">History</option>
-          </select>
-          {errors.category && <p className="error-message">Category is required</p>}
-        </label>
-        <label>
+          </Select>
+          {errors.category && <ErrorMessage>Category is required</ErrorMessage>}
+        </Label>
+        <Label>
           ISBN:
-          <input
+          <Input
             type="text"
             name="isbn"
             value={bookData.isbn}
             onChange={handleChange}
             required
-            pattern="\d+" // Регулярний вираз для перевірки лише цифр
-            title="ISBN Має бути цифрою" // Повідомлення для користувача
+            pattern="\d+"
+            title="ISBN must be a number"
             className={errors.isbn ? "input-error" : ""}
           />
-          {errors.isbn && <p className="error-message">ISBN is required</p>}
-        </label>
-        <label>
+          {errors.isbn && <ErrorMessage>ISBN is required</ErrorMessage>}
+        </Label>
+        <Label>
           Active:
-          <input
+          <Checkbox
             type="checkbox"
             name="active"
             checked={bookData.active}
@@ -168,17 +169,101 @@ const AddEditBook: React.FC = () => {
               setBookData({ ...bookData, active: e.target.checked })
             }
           />
-        </label>
-        <button type="submit">{id ? "Update Book" : "Add Book"}</button>
-      </form>
+        </Label>
+        <Button type="submit">{id ? "Update Book" : "Add Book"}</Button>
+      </Form>
 
-      {/* Лінк на сторінку Dashboard */}
-      <div>
-        <a href="/">Go to Dashboard</a>
-      </div>
-    </div>
+      <LinkWrapper>
+        <StyledLink href="/">Go to Dashboard</StyledLink>
+      </LinkWrapper>
+    </Wrapper>
   );
 };
 
-export default AddEditBook;
 
+
+// Styled-components
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Збільшено відступ між елементами */
+  width: 300px;
+  margin-top: 20px;
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px; /* Відступ між лейблом та полем вводу */
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px; /* Відступ після поля вводу */
+
+  &.input-error {
+    border-color: red;
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px; /* Відступ після поля вибору */
+`;
+
+const Checkbox = styled.input`
+  margin-left: 10px;
+  margin-bottom: 10px; /* Відступ для чекбокса */
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  font-size: 16px;
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #005f73;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+`;
+
+const LinkWrapper = styled.div`
+  margin: 40px 0;
+`;
+
+const StyledLink = styled.a`
+  color: #0077b6;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: bold;
+
+  &:hover {
+    color: #005f73;
+  }
+`;
+export default AddEditBook;
