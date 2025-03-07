@@ -30,7 +30,7 @@ const AddEditBook: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      const bookToEdit = books.find((book) => book.id === id);
+      const bookToEdit = books.find((book) => book.id === Number(id));
       if (bookToEdit) {
         setBookData({
           title: bookToEdit.title,
@@ -39,7 +39,7 @@ const AddEditBook: React.FC = () => {
           isbn: bookToEdit.isbn,
           active: bookToEdit.active,
           createdAt: bookToEdit.createdAt,
-          modifiedAt: bookToEdit.modifiedAt,
+          modifiedAt: bookToEdit.modifiedAt ?? ""
         });
       }
     }
@@ -101,7 +101,7 @@ const AddEditBook: React.FC = () => {
 
   return (
     <Wrapper>
-      <h1>{id ? "Edit Book" : "Add New Book"}</h1>
+      <Title>{id ? "Edit Book" : "Add New Book"}</Title>
       <Form onSubmit={handleSubmit}>
         <Label>
           Title:
@@ -180,59 +180,84 @@ const AddEditBook: React.FC = () => {
   );
 };
 
-
-
 // Styled-components
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 40px;
+  padding: 0 20px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;  // Початковий розмір шрифта для великих екранів
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;  // Зменшуємо розмір шрифта для планшетів
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.5rem;  // Зменшуємо розмір шрифта для мобільних пристроїв
+  }
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Збільшено відступ між елементами */
-  width: 300px;
+  gap: 20px;
+  width: 100%;
   margin-top: 20px;
 `;
 
 const Label = styled.label`
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 5px; /* Відступ між лейблом та полем вводу */
+  margin-bottom: 5px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 10px; /* Відступ після поля вводу */
+  margin-bottom: 10px;
 
   &.input-error {
     border-color: red;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
   }
 `;
 
 const Select = styled.select`
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 10px; /* Відступ після поля вибору */
+  margin-bottom: 10px;
+
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const Checkbox = styled.input`
   margin-left: 10px;
-  margin-bottom: 10px; /* Відступ для чекбокса */
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
-  padding: 10px;
+  padding: 12px;
   font-size: 16px;
   background-color: #0077b6;
   color: white;
@@ -266,4 +291,5 @@ const StyledLink = styled.a`
     color: #005f73;
   }
 `;
+
 export default AddEditBook;

@@ -36,8 +36,8 @@ const Dashboard: React.FC = () => {
   // Обробка видалення книги
   const handleDelete = async (bookId: number) => {
     try {
-      await dispatch(deleteBookThunk(bookId)); // чекаємо на завершення видалення
-      alert("Book successfully deleted."); // Показуємо повідомлення після успішного видалення
+      await dispatch(deleteBookThunk(bookId)); 
+      alert("Book successfully deleted."); 
     } catch (error) {
       console.error("Error deleting book:", error);
     }
@@ -47,24 +47,22 @@ const Dashboard: React.FC = () => {
     <DashboardWrapper>
       <FilterAndCountWrapper>
 
-      {/* Фільтр */}
-      <FilterWrapper>
-        <label>Filter:</label>
-        <select onChange={(e) => setFilter(e.target.value)} value={filter}>
-          <option>Show All</option>
-          <option>Show Active</option>
-          <option>Show Deactivated</option>
-        </select>
-      </FilterWrapper>
+        {/* Фільтр */}
+        <FilterWrapper>
+          <label>Filter:</label>
+          <select onChange={(e) => setFilter(e.target.value)} value={filter}>
+            <option>Show All</option>
+            <option>Show Active</option>
+            <option>Show Deactivated</option>
+          </select>
+        </FilterWrapper>
 
-      {/* Інформація про кількість записів */}
-      <RecordsCount>
-        Showing {filteredBooks.length} of {books.length} records
-      </RecordsCount>
+        {/* Інформація про кількість записів */}
+        <RecordsCount>
+          Showing {filteredBooks.length} of {books.length} records
+        </RecordsCount>
 
       </FilterAndCountWrapper>
- 
-
 
       {/* Таблиця */}
       <Table>
@@ -101,10 +99,10 @@ const Dashboard: React.FC = () => {
                   : "--"}
               </td>
 
-              <td>
-                <EditButton  to={`/edit/${book.id}`}>
+              <ActionsCell>
+                <EditButton to={`/edit/${book.id}`}>
                   Edit
-                </EditButton >
+                </EditButton>
                 <ActionButton
                   onClick={() =>
                     dispatch(toggleBookStatusThunk({ id: book.id, active: !book.active }))
@@ -119,7 +117,7 @@ const Dashboard: React.FC = () => {
                     Delete
                   </ActionButton>
                 )}
-              </td>
+              </ActionsCell>
             </TableRow>
           ))}
         </tbody>
@@ -172,17 +170,26 @@ const Table = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
   text-align: left;
+  font-size: 12px;
 
   th {
     background-color: #1e3a8a;
     color: white;
-    padding: 10px;
+    padding: 8px;
     font-weight: bold;
   }
 
   td {
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 14px;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 16px;
   }
 `;
 
@@ -193,39 +200,46 @@ const TableRow = styled.tr<{ active: boolean }>`
     background-color: #f1f1f1;
   }
 `;
-// Styled-components
+
+const ActionsCell = styled.td`
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
 const EditButton = styled(Link)`
-  background-color:rgb(255, 255, 255); 
-  color:  #45a049;
-  padding: 10px 15px;
-  border: 1px solid  #45a049;
+  background-color: rgb(255, 255, 255);
+  color: #45a049;
+  padding: 6px 10px;
+  border: 1px solid #45a049;
   border-radius: 4px;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   transition: all 0.3s ease;
-  margin-right: 10px;
+  margin-right: 5px;
 
   &:hover {
-    color:rgb(250, 255, 250);
-    background-color: #45a049; /
-    border-color: #388e3c; 
+    color: rgb(250, 255, 250);
+    background-color: #45a049;
+    border-color: #388e3c;
   }
 
   &:active {
-    transform: scale(0.98); 
+    transform: scale(0.98);
   }
 `;
 
 const ActionButton = styled.button<{ remove?: boolean }>`
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: 2px solid ${({ remove }) => (remove ? "#f44336" : "#facc15")};
   background-color: transparent;
   color: ${({ remove }) => (remove ? "#f44336" : "#facc15")};
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 5px;
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
 
@@ -248,6 +262,5 @@ const ErrorText = styled.p`
   margin-top: 50px;
   color: #f44336;
 `;
-
 
 export default Dashboard;
