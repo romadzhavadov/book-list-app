@@ -1,5 +1,3 @@
-import { api } from "./api";
-
 export interface Book {
   id: number;
   title: string;
@@ -11,39 +9,59 @@ export interface Book {
   modifiedAt?: string;
 }
 
+const baseURL = "http://localhost:3000";
+
+// Функція для виконання запитів з базовим URL
+const fetchFromApi = async (url: string, options: RequestInit = {}) => {
+  const response = await fetch(`${baseURL}${url}`, options);
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+  return await response.json();
+};
+
 // Отримати всі книги
 export const fetchBooks = async (): Promise<Book[]> => {
-  const response = await api.get("/books");
-  return response.data;
+  return await fetchFromApi("/books");
 };
 
 // Отримати книгу за ID
-export const fetchBookById = async (id: number): Promise<Book> => {
-  const response = await api.get(`/books/${id}`);
-  return response.data;
+export const fetchBookById = async (id: string): Promise<Book> => {
+  return await fetchFromApi(`/books/${id}`);
 };
 
 // Додати нову книгу
 export const addBook = async (book: Omit<Book, "id">): Promise<Book> => {
-  const response = await api.post("/books", book); // Запит на додавання
-  return response.data;
+  const options: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(book),
+  };
+  return await fetchFromApi("/books", options);
 };
 
 // Оновити книгу
 export const updateBook = async (id: string, updatedBook: Partial<Book>) => {
-  // API запит для оновлення книги
-  const response = await api.put(`/books/${id}`, updatedBook);
-  return response.data; // повертаємо всю оновлену книгу
+  const options: RequestInit = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedBook),
+  };
+  return await fetchFromApi(`/books/${id}`, options);
 };
 
 // Видалити книгу
 export const deleteBook = async (id: number): Promise<void> => {
-  await api.delete(`/books/${id}`);
+  const options: RequestInit = { method: "DELETE" };
+  await fetchFromApi(`/books/${id}`, options);
 };
 
 // Деактивувати або активувати книгу
 export const toggleBookStatus = async (id: number, active: boolean): Promise<Book> => {
-  const response = await api.patch(`/books/${id}`, { active, modifiedAt: new Date().toISOString() });
-  return response.data;
+  const options: RequestInit = {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ active, modifiedAt: new Date().toISOString() }),
+  };
+  return await fetchFromApi(`/books/${id}`, options);
 };
-

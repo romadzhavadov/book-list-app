@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
-import { fetchBooksThunk, toggleBookStatusThunk, deleteBookThunk } from "../redux/booksSlice";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import styled from "styled-components";
+import { fetchBooks, toggleBookStatus, deleteBook, Book } from "../services/bookService"; 
+
 
 const Dashboard: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { books, status } = useSelector((state: RootState) => state.books);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [status, setStatus] = useState<"idle" | "loading" | "succeeded" | "failed">("idle");
   const [filter, setFilter] = useState<string>("Show All");
 
   useEffect(() => {
-    dispatch(fetchBooksThunk());
-  }, [dispatch]);
-
-  if (status === "loading") return <LoadingText>Loading...</LoadingText>;
-  if (status === "failed") return <ErrorText>Error loading books</ErrorText>;
+    const loadBooks = async () => {
+      setStatus("loading");
+      try {
+        const fetchedBooks = await fetchBooks();
+        setBooks(fetchedBooks);
+        setStatus("succeeded");
+      } catch (error) {
+        console.error("Error loading books:", error);
+        setStatus("failed");
+      }
+    };
+    loadBooks();
+  }, []);
 
   // Фільтрація книг за статусом
   const filteredBooks = books.filter((book) => {
@@ -36,18 +43,21 @@ const Dashboard: React.FC = () => {
   // Обробка видалення книги
   const handleDelete = async (bookId: number) => {
     try {
-      await dispatch(deleteBookThunk(bookId)); 
-      alert("Book successfully deleted."); 
+      await deleteBook(bookId); 
+      setBooks(books.filter(book => book.id !== bookId)); 
+      alert("Book successfully deleted.");
     } catch (error) {
       console.error("Error deleting book:", error);
     }
   };
 
+  if (status === "loading") return <LoadingText>Loading...</LoadingText>;
+  if (status === "failed") return <ErrorText>Error loading books</ErrorText>;
+
   return (
     <DashboardWrapper>
       <FilterAndCountWrapper>
 
-        {/* Фільтр */}
         <FilterWrapper>
           <label>Filter:</label>
           <select onChange={(e) => setFilter(e.target.value)} value={filter}>
@@ -57,14 +67,12 @@ const Dashboard: React.FC = () => {
           </select>
         </FilterWrapper>
 
-        {/* Інформація про кількість записів */}
         <RecordsCount>
           Showing {filteredBooks.length} of {books.length} records
         </RecordsCount>
 
       </FilterAndCountWrapper>
 
-      {/* Таблиця */}
       <Table>
         <thead>
           <tr>
@@ -84,15 +92,12 @@ const Dashboard: React.FC = () => {
               <td>{book.author}</td>
               <td>{book.category}</td>
               <td>{book.isbn}</td>
-
-              {/* Форматування часу для Created At */}
               <td>
                 {book.createdAt
                   ? format(toZonedTime(new Date(book.createdAt), timeZone), "dd MMMM yyyy, h:mma")
                   : "--"}
               </td>
 
-              {/* Форматування часу для Modified At */}
               <td>
                 {book.modifiedAt
                   ? format(toZonedTime(new Date(book.modifiedAt), timeZone), "dd MMMM yyyy, h:mma")
@@ -104,14 +109,15 @@ const Dashboard: React.FC = () => {
                   Edit
                 </EditButton>
                 <ActionButton
-                  onClick={() =>
-                    dispatch(toggleBookStatusThunk({ id: book.id, active: !book.active }))
-                  }
+                  onClick={() => {
+                    const updatedBook = { ...book, active: !book.active };
+                    setBooks(books.map(b => (b.id === book.id ? updatedBook : b)));
+                    toggleBookStatus(book.id, updatedBook.active);
+                  }}
                 >
                   {book.active ? "Deactivate" : "Re-Activate"}
                 </ActionButton>
 
-                {/* Кнопка Delete доступна тільки для деактивованих книг */}
                 {!book.active && (
                   <ActionButton onClick={() => handleDelete(book.id)} remove>
                     Delete
@@ -264,3 +270,4 @@ const ErrorText = styled.p`
 `;
 
 export default Dashboard;
+

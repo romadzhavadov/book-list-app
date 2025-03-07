@@ -10,8 +10,8 @@ const Header: React.FC = () => {
       <NavLink to="/">
         <Logo>Book List</Logo>
       </NavLink>
-      <AddBookButton to={location.pathname === "/add" ? "/" : "/add"}>
-        {location.pathname === "/add" ? "Go to Dashboard" : "Add Book"}
+      <AddBookButton to={location.pathname === "/" ? "/add" : "/"}>
+        {location.pathname === "/" ? "Add Book" : "Go to Dashboard"}
       </AddBookButton>
     </StyledHeader>
   );

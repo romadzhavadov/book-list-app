@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
-import { addBookThunk, updateBookThunk } from "../redux/booksSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { Book, addBook, updateBook, fetchBookById } from "../services/bookService";
 
 const AddEditBook: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
+  const { id } = useParams<{ id: string }>(); 
   const navigate = useNavigate();
-  const { books } = useSelector((state: RootState) => state.books);
 
-  const [bookData, setBookData] = useState({
+  const [bookData, setBookData] = useState<Omit<Book, "id">>({
     title: "",
     author: "",
     category: "",
@@ -28,27 +24,37 @@ const AddEditBook: React.FC = () => {
     isbn: false,
   });
 
+  // Завантажуємо книгу за ID, якщо воно є
   useEffect(() => {
     if (id) {
-      const bookToEdit = books.find((book) => book.id === Number(id));
-      if (bookToEdit) {
-        setBookData({
-          title: bookToEdit.title,
-          author: bookToEdit.author,
-          category: bookToEdit.category,
-          isbn: bookToEdit.isbn,
-          active: bookToEdit.active,
-          createdAt: bookToEdit.createdAt,
-          modifiedAt: bookToEdit.modifiedAt ?? ""
+      fetchBookById(id)
+        .then((book) => {
+          if (book) {
+            setBookData({
+              title: book.title,
+              author: book.author,
+              category: book.category,
+              isbn: book.isbn,
+              active: book.active,
+              createdAt: book.createdAt,
+              modifiedAt: book.modifiedAt ?? "",
+            });
+          } else {
+            console.error("Book not found with id:", id); 
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch book:", error);
         });
-      }
     }
-  }, [id, books]);
+  }, [id]);
 
+  // Обробка зміни значень в інпутах
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setBookData({ ...bookData, [e.target.name]: e.target.value });
   };
 
+  // Перевірка на валідність форми
   const validateForm = () => {
     const newErrors = {
       title: !bookData.title,
@@ -61,6 +67,7 @@ const AddEditBook: React.FC = () => {
     return !Object.values(newErrors).includes(true);
   };
 
+  // Обробка сабміту форми
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -68,30 +75,32 @@ const AddEditBook: React.FC = () => {
       return;
     }
 
-    const updatedBook = {
+    const updatedBook: Partial<Book> = {
       ...bookData,
       modifiedAt: new Date().toISOString(),
     };
 
     if (id) {
-      dispatch(updateBookThunk({ id, updatedBook }))
+      // Якщо є ID, оновлюємо книгу
+      updateBook(id, updatedBook)
         .then(() => {
           alert("Book updated successfully!");
-          navigate("/");
+          navigate("/"); // Перехід на головну сторінку
         })
         .catch((error) => {
           console.error("Failed to update book:", error);
         });
     } else {
-      const newBook = {
+      // Якщо ID немає, додаємо нову книгу
+      const newBook: Omit<Book, "id"> = {
         ...bookData,
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
       };
-      dispatch(addBookThunk(newBook))
+      addBook(newBook)
         .then(() => {
           alert("Book added successfully!");
-          navigate("/");
+          navigate("/"); // Перехід на головну сторінку
         })
         .catch((error) => {
           console.error("Failed to add book:", error);
@@ -163,11 +172,8 @@ const AddEditBook: React.FC = () => {
           Active:
           <Checkbox
             type="checkbox"
-            name="active"
-            checked={bookData.active}
-            onChange={(e) =>
-              setBookData({ ...bookData, active: e.target.checked })
-            }
+            checked={bookData.active} 
+            onChange={(e) => setBookData({ ...bookData, active: e.target.checked })}
           />
         </Label>
         <Button type="submit">{id ? "Update Book" : "Add Book"}</Button>
@@ -193,18 +199,10 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;  // Початковий розмір шрифта для великих екранів
+  font-size: 2rem;
   font-weight: bold;
   text-align: center;
   margin: 20px 0;
-
-  @media (max-width: 768px) {
-    font-size: 1.8rem;  // Зменшуємо розмір шрифта для планшетів
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.5rem;  // Зменшуємо розмір шрифта для мобільних пристроїв
-  }
 `;
 
 const Form = styled.form`
@@ -232,10 +230,6 @@ const Input = styled.input`
   &.input-error {
     border-color: red;
   }
-
-  @media (max-width: 480px) {
-    padding: 10px;
-  }
 `;
 
 const Select = styled.select`
@@ -245,10 +239,6 @@ const Select = styled.select`
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-bottom: 10px;
-
-  @media (max-width: 480px) {
-    padding: 10px;
-  }
 `;
 
 const Checkbox = styled.input`

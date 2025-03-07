@@ -1,26 +1,30 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "./redux/store";
-import { fetchBooksThunk } from "./redux/booksSlice";
-import AppRouter from "./AppRouter"
+import AppRouter from "./AppRouter";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
-
+import { fetchBooks } from "./services/bookService"; 
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchBooksThunk());
-  }, [dispatch]);
+    const getBooks = async () => {
+      try {
+        await fetchBooks();
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+
+    getBooks();
+  }, []);
 
   return (
     <>
-      <Header/>
+      <Header />
       <AppRouter />
-      <Footer/>
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

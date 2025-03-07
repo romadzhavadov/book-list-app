@@ -8,7 +8,7 @@
       "isbn": "5",
       "active": true,
       "createdAt": "2025-03-06T23:11:44.714Z",
-      "modifiedAt": "2025-03-07T21:06:58.997Z"
+      "modifiedAt": "2025-03-07T21:36:33.829Z"
     },
     {
       "id": "76fe",
@@ -18,7 +18,7 @@
       "isbn": "5",
       "active": true,
       "createdAt": "2025-03-07T20:21:32.334Z",
-      "modifiedAt": "2025-03-07T20:21:32.334Z"
+      "modifiedAt": "2025-03-07T21:36:32.453Z"
     },
     {
       "id": "fa0d",
@@ -28,7 +28,47 @@
       "isbn": "8",
       "active": false,
       "createdAt": "2025-03-07T21:07:33.494Z",
-      "modifiedAt": "2025-03-07T21:07:38.125Z"
+      "modifiedAt": "2025-03-07T21:36:30.693Z"
+    },
+    {
+      "title": "мвм",
+      "author": "вмв",
+      "category": "Non-Fiction",
+      "isbn": "4",
+      "active": true,
+      "createdAt": "2025-03-07T21:45:49.286Z",
+      "modifiedAt": "2025-03-07T21:51:04.962Z",
+      "id": "48aa"
+    },
+    {
+      "title": "іііііііііііііііііііі",
+      "author": "ячячс",
+      "category": "Fiction",
+      "isbn": "4",
+      "active": true,
+      "createdAt": "2025-03-07T21:50:34.555Z",
+      "modifiedAt": "2025-03-07T21:50:46.442Z",
+      "id": "8faa"
+    },
+    {
+      "id": "43c0",
+      "title": "м",
+      "author": "Roman",
+      "category": "Fiction",
+      "isbn": "5",
+      "active": true,
+      "createdAt": "2025-03-07T21:51:15.559Z",
+      "modifiedAt": "2025-03-07T21:51:15.559Z"
+    },
+    {
+      "id": "c97f",
+      "title": "Твв",
+      "author": "Roman",
+      "category": "Non-Fiction",
+      "isbn": "5",
+      "active": true,
+      "createdAt": "2025-03-07T22:06:24.655Z",
+      "modifiedAt": "2025-03-07T22:06:24.655Z"
     }
   ]
 }
